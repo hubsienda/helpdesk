@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fetchTickets } from "@/lib/api";
+import { fetchTickets } from "../../lib/api";
 
 export default async function InboxPage() {
   let tickets = [];
