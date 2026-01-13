@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fetchTicket } from "@/lib/api";
+import { fetchTickets } from "../../lib/api";
 
 export default async function TicketPage({ params }: { params: { id: string } }) {
   let ticket: any = null;
