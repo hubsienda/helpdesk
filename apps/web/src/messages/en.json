@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "Helpdesk",
+    "nav": { "inbox": "Inbox" },
+    "footer": "© {year} Helpdesk"
+  },
+  "home": {
+    "title": "Unified Inbox",
+    "subtitle": "A minimal helpdesk for handling requests across channels — starting with email, then upgrading to WhatsApp workflows when you’re ready.",
+    "openInbox": "Open Inbox",
+    "viewTickets": "View tickets →",
+    "cards": {
+      "cleanQueueTitle": "Clean queue",
+      "cleanQueueBody": "Assign, tag, track, close.",
+      "fastRepliesTitle": "Fast replies",
+      "fastRepliesBody": "Templates and draft replies.",
+      "workflowReadyTitle": "Workflow-ready",
+      "workflowReadyBody": "Escalation and audit trails."
+    }
+  },
+  "inbox": {
+    "title": "Inbox",
+    "subtitle": "Shared queue (Email now; WhatsApp later via BSP).",
+    "apiConfigured": "API configured",
+    "apiNotConfigured": "API not configured",
+    "apiWarningTitle": "Can’t reach the API yet.",
+    "apiWarningBody": "Set NEXT_PUBLIC_API_URL in Vercel, and ensure the API is deployed.",
+    "empty": "No tickets yet. (We’ll add “Create ticket” next.)",
+    "table": {
+      "subject": "Subject",
+      "channel": "Channel",
+      "status": "Status",
+      "created": "Created"
+    },
+    "back": "← Back to Inbox"
+  },
+  "ticket": {
+    "title": "Ticket",
+    "cantLoad": "Can’t load ticket.",
+    "notFound": "Ticket not found",
+    "next": "Next: message timeline + internal notes + reply composer."
+  }
+}
