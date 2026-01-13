@@ -5,6 +5,10 @@ import {getMessages, getTranslations} from "next-intl/server";
 import {locales, type Locale} from "../../i18n/routing";
 import {notFound} from "next/navigation";
 
+export function generateStaticParams() {
+  return locales.map((locale) => ({locale}));
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("app");
   return {
@@ -27,7 +31,7 @@ export default async function LocaleLayout({
   const t = await getTranslations("app");
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <div className="min-h-screen bg-white text-slate-900">
         <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur">
           <div className="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between">
