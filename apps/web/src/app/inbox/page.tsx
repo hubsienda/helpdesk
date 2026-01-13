@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { fetchTickets } from "../../lib/api";
+import { fetchTickets, type Ticket } from "../../lib/api";
 
 export default async function InboxPage() {
-  let tickets = [];
+  let tickets: Ticket[] = [];
   let error: string | null = null;
 
   try {
     tickets = await fetchTickets();
-  } catch (e: any) {
-    error = e?.message ?? "Unknown error";
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Unknown error";
   }
 
   return (
@@ -22,7 +22,7 @@ export default async function InboxPage() {
         </div>
 
         <div className="text-xs text-slate-500">
-          {process.env.NEXT_PUBLIC_API_URL ? "API connected" : "API not configured"}
+          {process.env.NEXT_PUBLIC_API_URL ? "API configured" : "API not configured"}
         </div>
       </div>
 
@@ -30,7 +30,10 @@ export default async function InboxPage() {
         <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-sm">
           <div className="font-medium">Can’t reach the API yet.</div>
           <div className="mt-1 text-slate-700">
-            Set <code className="px-1 py-0.5 rounded bg-white border">NEXT_PUBLIC_API_URL</code>{" "}
+            Set{" "}
+            <code className="px-1 py-0.5 rounded bg-white border">
+              NEXT_PUBLIC_API_URL
+            </code>{" "}
             in Vercel, and ensure the API is deployed.
           </div>
           <div className="mt-2 text-slate-600">Error: {error}</div>
@@ -51,7 +54,7 @@ export default async function InboxPage() {
               </tr>
             </thead>
             <tbody>
-              {tickets.map((t: any) => (
+              {tickets.map((t) => (
                 <tr key={t.id} className="border-t">
                   <td className="px-3 py-2">
                     <Link className="hover:underline" href={`/tickets/${t.id}`}>
@@ -60,7 +63,9 @@ export default async function InboxPage() {
                   </td>
                   <td className="px-3 py-2">{t.channel}</td>
                   <td className="px-3 py-2">{t.status}</td>
-                  <td className="px-3 py-2">{new Date(t.created_at).toLocaleString("en-GB")}</td>
+                  <td className="px-3 py-2">
+                    {new Date(t.created_at).toLocaleString("en-GB")}
+                  </td>
                 </tr>
               ))}
             </tbody>
