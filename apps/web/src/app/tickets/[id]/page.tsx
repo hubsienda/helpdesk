@@ -1,25 +1,27 @@
 import Link from "next/link";
-import { fetchTickets } from "../../lib/api";
+import { fetchTicket, type Ticket } from "../../../lib/api";
 
 export default async function TicketPage({ params }: { params: { id: string } }) {
-  let ticket: any = null;
+  let ticket: Ticket | null = null;
   let error: string | null = null;
 
   try {
     ticket = await fetchTicket(params.id);
-  } catch (e: any) {
-    error = e?.message ?? "Unknown error";
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Unknown error";
   }
 
-  if (error) {
+  if (error || !ticket) {
     return (
       <div className="space-y-3">
         <h1 className="text-xl font-semibold">Ticket</h1>
         <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-sm">
           <div className="font-medium">Can’t load ticket.</div>
-          <div className="mt-2 text-slate-600">Error: {error}</div>
+          <div className="mt-2 text-slate-600">Error: {error ?? "Ticket not found"}</div>
         </div>
-        <Link className="text-sm hover:underline" href="/inbox">← Back to Inbox</Link>
+        <Link className="text-sm hover:underline" href="/inbox">
+          ← Back to Inbox
+        </Link>
       </div>
     );
   }
