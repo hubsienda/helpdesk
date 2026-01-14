@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import {getTranslations} from "next-intl/server";
 import {locales, type Locale} from "../../i18n/routing";
