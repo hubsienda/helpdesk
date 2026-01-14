@@ -1,5 +1,5 @@
 import createMiddleware from "next-intl/middleware";
-import {locales, defaultLocale} from "./src/i18n/routing";
+import { locales, defaultLocale } from "./src/i18n/routing";
 
 export default createMiddleware({
   locales,
@@ -8,5 +8,8 @@ export default createMiddleware({
 });
 
 export const config = {
-  matcher: ["/", "/(en|es|it)/:path*"]
+  matcher: [
+    // Exclude Next internals + API + common static files + anything with a dot
+    "/((?!api|_next|_vercel|favicon\\.ico|robots\\.txt|sitemap\\.xml|.*\\..*).*)"
+  ]
 };
