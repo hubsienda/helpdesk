@@ -1,11 +1,30 @@
 import Link from "next/link";
-import {NextIntlClientProvider} from "next-intl";
-import {locales, type Locale} from "../../i18n/routing";
-import {notFound} from "next/navigation";
-import {loadMessages, makeT} from "../../lib/i18n";
+import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
+import { locales, type Locale } from "../../i18n/routing";
+import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
-  return locales.map((locale) => ({locale}));
+  // Enables static rendering when Next tries to prerender routes
+  return locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const locale = params.locale as Locale;
+  if (!locales.includes(locale)) notFound();
+
+  // Important: bind translations to the locale (don’t rely on headers)
+  const t = await getTranslations({ locale, namespace: "app" });
+
+  return {
+    title: t("name"),
+    description: "Unified inbox (Email + WhatsApp-ready)"
+  };
 }
 
 export default async function LocaleLayout({
@@ -13,13 +32,18 @@ export default async function LocaleLayout({
   params
 }: {
   children: React.ReactNode;
-  params: {locale: string};
+  params: { locale: string };
 }) {
   const locale = params.locale as Locale;
   if (!locales.includes(locale)) notFound();
 
-  const messages = await loadMessages(locale);
-  const t = makeT(messages, "app");
+  // This removes the “used headers” static-render crash with next-intl
+  // (and makes prerendering deterministic).
+  setRequestLocale(locale);
+
+  // Important: bind messages to the locale (don’t rely on headers)
+  const messages = await getMessages({ locale });
+  const t = await getTranslations({ locale, namespace: "app" });
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
@@ -41,7 +65,9 @@ export default async function LocaleLayout({
         <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
 
         <footer className="mx-auto max-w-5xl px-4 pb-10 pt-6 text-xs text-slate-500">
-          <div className="border-t pt-4">{t("footer", {year: new Date().getFullYear()})}</div>
+          <div className="border-t pt-4">
+            {t("footer", { year: new Date().getFullYear() })}
+          </div>
         </footer>
       </div>
     </NextIntlClientProvider>
