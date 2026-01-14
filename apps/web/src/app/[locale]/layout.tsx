@@ -1,20 +1,11 @@
 import Link from "next/link";
-import type {Metadata} from "next";
 import {NextIntlClientProvider} from "next-intl";
-import {getMessages, getTranslations} from "next-intl/server";
 import {locales, type Locale} from "../../i18n/routing";
 import {notFound} from "next/navigation";
+import {loadMessages, makeT} from "../../lib/i18n";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({locale}));
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("app");
-  return {
-    title: t("name"),
-    description: "Unified inbox (Email + WhatsApp-ready)"
-  };
 }
 
 export default async function LocaleLayout({
@@ -27,8 +18,8 @@ export default async function LocaleLayout({
   const locale = params.locale as Locale;
   if (!locales.includes(locale)) notFound();
 
-  const messages = await getMessages();
-  const t = await getTranslations("app");
+  const messages = await loadMessages(locale);
+  const t = makeT(messages, "app");
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
@@ -50,9 +41,7 @@ export default async function LocaleLayout({
         <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
 
         <footer className="mx-auto max-w-5xl px-4 pb-10 pt-6 text-xs text-slate-500">
-          <div className="border-t pt-4">
-            {t("footer", {year: new Date().getFullYear()})}
-          </div>
+          <div className="border-t pt-4">{t("footer", {year: new Date().getFullYear()})}</div>
         </footer>
       </div>
     </NextIntlClientProvider>
